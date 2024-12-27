@@ -5,11 +5,17 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import org.hibernate.validator.constraints.CreditCardNumber;
 
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
-public class TacoOrder {
+public class TacoOrder implements Serializable {
+    private static final long serialVersionUID = 1L;
+    private Long id;
+    private Date createdAt = new Date();
+
     @NotBlank(message = "Delivery name is required")
     private String deliveryName;
 
@@ -38,6 +44,22 @@ public class TacoOrder {
     private List<Taco> tacos = new ArrayList<>();
 
     public TacoOrder() {
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
     }
 
     public void addTaco(Taco taco) {
@@ -118,10 +140,11 @@ public class TacoOrder {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         TacoOrder tacoOrder = (TacoOrder) o;
-        return Objects.equals(deliveryName, tacoOrder.deliveryName)
+        return Objects.equals(id, tacoOrder.id)
+                && Objects.equals(createdAt, tacoOrder.createdAt)
+                && Objects.equals(deliveryName, tacoOrder.deliveryName)
                 && Objects.equals(deliveryStreet, tacoOrder.deliveryStreet)
                 && Objects.equals(deliveryCity, tacoOrder.deliveryCity)
                 && Objects.equals(deliveryState, tacoOrder.deliveryState)
@@ -134,14 +157,17 @@ public class TacoOrder {
 
     @Override
     public int hashCode() {
-        return Objects.hash(deliveryName, deliveryStreet, deliveryCity,
-                deliveryState, deliveryZip, ccNumber, ccExpiration, ccCVV, tacos);
+        return Objects.hash(id, createdAt, deliveryName, deliveryStreet,
+                deliveryCity, deliveryState, deliveryZip, ccNumber,
+                ccExpiration, ccCVV, tacos);
     }
 
     @Override
     public String toString() {
         return "TacoOrder{" +
-                "deliveryName='" + deliveryName + '\'' +
+                "id=" + id +
+                ", createdAt=" + createdAt +
+                ", deliveryName='" + deliveryName + '\'' +
                 ", deliveryStreet='" + deliveryStreet + '\'' +
                 ", deliveryCity='" + deliveryCity + '\'' +
                 ", deliveryState='" + deliveryState + '\'' +
