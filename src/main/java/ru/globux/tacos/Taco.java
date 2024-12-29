@@ -1,26 +1,33 @@
 package ru.globux.tacos;
 
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
+@Entity
 public class Taco {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private Date createdAt = new Date();
+
     @NotNull
     @Size(min = 5, message = "Name must be at least 5 characters long")
     private String name;
 
     @NotNull
     @Size(min = 1, message = "You must choose at least 1 ingredient")
+    @ManyToMany()
     private List<Ingredient> ingredients;
 
-    public Taco() {
-    }
+    private Date createdAt = new Date();
 
     public Long getId() {
         return id;
@@ -30,12 +37,18 @@ public class Taco {
         this.id = id;
     }
 
-    public Date getCreatedAt() {
-        return createdAt;
+    public Taco() {
     }
 
-    public void setCreatedAt(Date createdAt) {
+    public Taco(Long id, String name, List<Ingredient> ingredients, Date createdAt) {
+        this.id = id;
+        this.name = name;
+        this.ingredients = ingredients;
         this.createdAt = createdAt;
+    }
+
+    public void addIngredient(Ingredient ingredient) {
+        this.ingredients.add(ingredient);
     }
 
     public String getName() {
@@ -44,6 +57,14 @@ public class Taco {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt() {
+        this.createdAt = new Date();
     }
 
     public List<Ingredient> getIngredients() {

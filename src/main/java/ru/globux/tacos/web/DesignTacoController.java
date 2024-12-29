@@ -15,8 +15,6 @@ import ru.globux.tacos.TacoOrder;
 import ru.globux.tacos.Ingredient.Type;
 import ru.globux.tacos.data.IngredientRepository;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
