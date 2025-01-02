@@ -1,19 +1,16 @@
 package ru.globux.tacos;
 
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import org.springframework.data.cassandra.core.mapping.PrimaryKey;
+import org.springframework.data.cassandra.core.mapping.Table;
 
 import java.util.Objects;
 
-@Entity
+@Table("ingredients")
 public class Ingredient {
-    @Id
-    @Column(nullable = false)
-    private final String id;
-    private final String name;
-    private final Type type;
+    @PrimaryKey
+    private String id;
+    private String name;
+    private Type type;
 
     public String getId() {
         return id;

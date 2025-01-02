@@ -13,6 +13,7 @@ import ru.globux.tacos.Ingredient;
 import ru.globux.tacos.Taco;
 import ru.globux.tacos.TacoOrder;
 import ru.globux.tacos.Ingredient.Type;
+import ru.globux.tacos.TacoUDT;
 import ru.globux.tacos.data.IngredientRepository;
 
 import java.util.stream.Collectors;
@@ -60,7 +61,7 @@ public class DesignTacoController {
         if (errors.hasErrors()) {
             return "design";
         }
-        tacoOrder.addTaco(taco);
+        tacoOrder.addTaco(new TacoUDT(taco.getName(), taco.getIngredients()));
         log.info("Processing taco: {}", taco);
         return "redirect:/orders/current";
     }

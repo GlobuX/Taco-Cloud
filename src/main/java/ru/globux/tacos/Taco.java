@@ -1,46 +1,44 @@
 package ru.globux.tacos;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
+import com.datastax.oss.driver.api.core.uuid.Uuids;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import org.springframework.data.cassandra.core.cql.Ordering;
+import org.springframework.data.cassandra.core.cql.PrimaryKeyType;
+import org.springframework.data.cassandra.core.mapping.Column;
+import org.springframework.data.cassandra.core.mapping.PrimaryKeyColumn;
+import org.springframework.data.cassandra.core.mapping.Table;
 
-@Entity
+@Table("tacos")
 public class Taco {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    @PrimaryKeyColumn(type = PrimaryKeyType.PARTITIONED)
+    private UUID id = Uuids.timeBased();
 
     @NotNull
     @Size(min = 5, message = "Name must be at least 5 characters long")
     private String name;
 
-    @NotNull
     @Size(min = 1, message = "You must choose at least 1 ingredient")
-    @ManyToMany()
-    private List<Ingredient> ingredients;
+    @Column("ingredients")
+    private List<IngredientUDT> ingredients = new ArrayList<>();
 
+    @PrimaryKeyColumn(type = PrimaryKeyType.CLUSTERED, ordering = Ordering.DESCENDING)
     private Date createdAt = new Date();
 
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
     public Taco() {
     }
 
-    public Taco(Long id, String name, List<Ingredient> ingredients, Date createdAt) {
+    public Taco(UUID id, String name, List<IngredientUDT> ingredients, Date createdAt) {
         this.id = id;
         this.name = name;
         this.ingredients = ingredients;
@@ -48,7 +46,7 @@ public class Taco {
     }
 
     public void addIngredient(Ingredient ingredient) {
-        this.ingredients.add(ingredient);
+        this.ingredients.add(TacoUDRUtils.toIngredientUDT(ingredient));
     }
 
     public String getName() {
@@ -67,11 +65,11 @@ public class Taco {
         this.createdAt = new Date();
     }
 
-    public List<Ingredient> getIngredients() {
+    public List<IngredientUDT> getIngredients() {
         return ingredients;
     }
 
-    public void setIngredients(List<Ingredient> ingredients) {
+    public void setIngredients(List<IngredientUDT> ingredients) {
         this.ingredients = ingredients;
     }
 
