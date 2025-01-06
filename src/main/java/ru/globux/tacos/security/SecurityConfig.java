@@ -1,8 +1,11 @@
 package ru.globux.tacos.security;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -17,8 +20,14 @@ import ru.globux.tacos.data.UserRepository;
 import java.util.ArrayList;
 import java.util.List;
 
+@EnableWebSecurity(debug = true)
 @Configuration
 public class SecurityConfig {
+    private UserDetailsService userDetailsService;
+
+    public SecurityConfig(UserDetailsService userDetailsService) {
+        this.userDetailsService = userDetailsService;
+    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -31,9 +40,18 @@ public class SecurityConfig {
                     .requestMatchers("/design", "/orders").hasRole("USER")
                     .requestMatchers("/", "/**").permitAll())
             .formLogin(httpSecFormLoginConf -> httpSecFormLoginConf
-                    .loginPage("/login"));
+                    .loginPage("/login"))
+            .logout(logout -> logout
+                    .logoutSuccessUrl("/"))
+            .csrf(matcher -> matcher
+                    .ignoringRequestMatchers("/design**")
+                    .ignoringRequestMatchers("/h2-console/**")
+                    .ignoringRequestMatchers("/actuator"))
+            .headers(matcher -> matcher
+                    .frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin));
         return http.build();
     }
+
 
 //    @Bean
 //    public UserDetailsService userDetailsService(PasswordEncoder encoder) {
@@ -47,12 +65,4 @@ public class SecurityConfig {
 //        return new InMemoryUserDetailsManager(userList);
 //    }
 
-    @Bean
-    public UserDetailsService userDetailsService(UserRepository userRepo) {
-        return username -> {
-            User user = userRepo.findByUsername(username);
-            if (user != null) return user;
-            throw new UsernameNotFoundException("User '" + username + "' not found");
-        };
-    }
 }

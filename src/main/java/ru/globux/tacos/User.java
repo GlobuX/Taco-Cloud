@@ -1,6 +1,7 @@
 package ru.globux.tacos;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -10,7 +11,10 @@ import java.util.List;
 import java.util.Objects;
 
 @Entity
+@Table(name = "users")
 public class User implements UserDetails {
+    private static final long serialVersionUID = 1L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(nullable = false)
@@ -18,25 +22,21 @@ public class User implements UserDetails {
 
     private final String username;
     private final String password;
-    private String fullname;
-    private String street;
-    private String city;
-    private String state;
-    private String zip;
-    private String phoneNumber;
+    private final String fullname;
+    private final String street;
+    private final String city;
+    private final String state;
+    private final String zip;
+    private final String phoneNumber;
 
     public Long getId() {
-        return id;
+        return this.id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public User(String username, String password) {
-        this.username = username;
-        this.password = password;
-    }
+//    public User(String username, String password) {
+//        this.username = username;
+//        this.password = password;
+//    }
 
     public User(String username, String password, String fullname, String street,
                 String city, String state, String zip, String phoneNumber) {
@@ -53,6 +53,12 @@ public class User implements UserDetails {
     public User() {
         this.username = null;
         this.password = null;
+        this.fullname = null;
+        this.street = null;
+        this.city = null;
+        this.state = null;
+        this.zip = null;
+        this.phoneNumber = null;
     }
 
     @Override
@@ -74,49 +80,49 @@ public class User implements UserDetails {
         return fullname;
     }
 
-    public void setFullname(String fullname) {
-        this.fullname = fullname;
-    }
+//    public void setFullname(String fullname) {
+//        this.fullname = fullname;
+//    }
 
     public String getStreet() {
         return street;
     }
 
-    public void setStreet(String street) {
-        this.street = street;
-    }
+//    public void setStreet(String street) {
+//        this.street = street;
+//    }
 
     public String getCity() {
         return city;
     }
 
-    public void setCity(String city) {
-        this.city = city;
-    }
+//    public void setCity(String city) {
+//        this.city = city;
+//    }
 
     public String getState() {
         return state;
     }
 
-    public void setState(String state) {
-        this.state = state;
-    }
+//    public void setState(String state) {
+//        this.state = state;
+//    }
 
     public String getZip() {
         return zip;
     }
 
-    public void setZip(String zip) {
-        this.zip = zip;
-    }
+//    public void setZip(String zip) {
+//        this.zip = zip;
+//    }
 
     public String getPhoneNumber() {
         return phoneNumber;
     }
 
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
+//    public void setPhoneNumber(String phoneNumber) {
+//        this.phoneNumber = phoneNumber;
+//    }
 
     @Override
     public boolean equals(Object o) {

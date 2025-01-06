@@ -3,11 +3,9 @@ package ru.globux.tacos;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import org.hibernate.validator.constraints.CreditCardNumber;
 
-import ru.globux.tacos.Taco;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -15,6 +13,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Entity
+@Table(name = "taco_order")
 public class TacoOrder implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -22,6 +21,9 @@ public class TacoOrder implements Serializable {
     @Column(name = "id", nullable = false)
     private Long id;
     private Date createdAt = new Date();
+
+    @ManyToOne
+    private User user;
 
     @NotBlank(message = "Delivery name is required")
     private String deliveryName;
@@ -48,14 +50,19 @@ public class TacoOrder implements Serializable {
     @Digits(integer = 3, fraction = 0, message = "Invalid CVV")
     private String ccCVV;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(targetEntity = Taco.class)
+    @JoinColumn
     private List<Taco> tacos = new ArrayList<>();
 
-    public TacoOrder() {
-        this.id = null;
-        this.createdAt = null;
-        this.deliveryName = null;
+    public void setUser(User user) {
+        this.user = user;
+    }
 
+    public User getUser() {
+        return user;
+    }
+
+    public TacoOrder() {
     }
 
     public Long getId() {

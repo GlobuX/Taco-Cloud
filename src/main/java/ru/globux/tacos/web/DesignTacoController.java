@@ -13,21 +13,31 @@ import ru.globux.tacos.Ingredient;
 import ru.globux.tacos.Taco;
 import ru.globux.tacos.TacoOrder;
 import ru.globux.tacos.Ingredient.Type;
+import ru.globux.tacos.User;
 import ru.globux.tacos.data.IngredientRepository;
+import ru.globux.tacos.data.TacoRepository;
+import ru.globux.tacos.data.UserRepository;
 
+import java.security.Principal;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 @Controller
 @RequestMapping("/design")
-@SessionAttributes("tacoOrder")
+@SessionAttributes("order")
 public class DesignTacoController {
-    private static Logger log = LoggerFactory.getLogger(DesignTacoController.class);
+    private static final Logger log = LoggerFactory.getLogger(DesignTacoController.class);
     private final IngredientRepository ingredientRepository;
+    private final TacoRepository tacoRepo;
+    private final UserRepository userRepo;
 
     @Autowired
-    public DesignTacoController(IngredientRepository ingredientRepository) {
-        this.ingredientRepository = ingredientRepository;
+    public DesignTacoController(IngredientRepository ingredientRepo,
+                                TacoRepository tacoRepo,
+                                UserRepository userRepo) {
+        this.ingredientRepository = ingredientRepo;
+        this.tacoRepo = tacoRepo;
+        this.userRepo = userRepo;
     }
 
     @ModelAttribute
@@ -40,7 +50,7 @@ public class DesignTacoController {
         }
     }
 
-    @ModelAttribute(name = "tacoOrder")
+    @ModelAttribute(name = "order")
     public TacoOrder order() {
         return new TacoOrder();
     }
@@ -50,18 +60,26 @@ public class DesignTacoController {
         return new Taco();
     }
 
+    @ModelAttribute(name = "user")
+    public User user(Principal principal) {
+        String username = principal.getName();
+        return userRepo.findByUsername(username);
+    }
+
     @GetMapping
     public String showDesignForm() {
         return "design";
     }
 
     @PostMapping
-    public String processTaco(@Valid Taco taco, Errors errors, @ModelAttribute TacoOrder tacoOrder) {
+    public String processTaco(@Valid Taco taco, Errors errors,
+                              @ModelAttribute TacoOrder order) {
+        log.info("   --- Сохраняем taco");
         if (errors.hasErrors()) {
             return "design";
         }
-        tacoOrder.addTaco(taco);
-        log.info("Processing taco: {}", taco);
+        Taco saved = tacoRepo.save(taco);
+        order.addTaco(saved);
         return "redirect:/orders/current";
     }
 

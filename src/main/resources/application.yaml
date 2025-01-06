@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: Taco-Cloud
+  thymeleaf:
+    cache: false
+  datasource:
+    generate-unique-name: false
+    name: tacocloud
+management:
+  endpoints:
+    access:
+      default: unrestricted
+logging:
+  level:
+    org.springframework.security: trace
