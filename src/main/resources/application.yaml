@@ -13,3 +13,6 @@ management:
 logging:
   level:
     org.springframework.security: trace
+taco:
+  orders:
+    pageSize: 20
