@@ -12,23 +12,29 @@ spring:
     name: Taco-Cloud
   thymeleaf:
     cache: false
-  datasource:
-    generate-unique-name: false
-    name: tacocloud
+
   jpa:
     show-sql: true
-    properties:
-      hibernate:
-        format_sql: true
+    hibernate:
+      ddl-auto: update
+  datasource:
+    name: tacocloud
+    generate-unique-name: false
+    url: jdbc:h2:mem:tacocloud
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  h2:
+    console:
+      enabled: true
+
 management:
   endpoints:
     access:
       default: unrestricted
 logging:
   level:
-#    org.springframework.security: trace
-    org.hibernate.sql: trace
-    org.hibernate.type.descriptor.sql: trace
+    org.springframework.security: warn
 taco:
   orders:
     pageSize: 20

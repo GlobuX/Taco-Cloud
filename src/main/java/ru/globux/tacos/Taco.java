@@ -19,7 +19,7 @@ public class Taco {
     @Size(min = 5, message = "Name must be at least 5 characters long")
     private String name;
 
-    @ManyToMany(targetEntity = Ingredient.class, cascade = CascadeType.MERGE)
+    @ManyToMany(targetEntity = Ingredient.class)
     @JoinTable(name = "Taco_Ingredients",
             joinColumns = @JoinColumn(name = "taco_id"),
             inverseJoinColumns = @JoinColumn(name = "ingredient_id"))
