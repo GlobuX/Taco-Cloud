@@ -4,20 +4,17 @@ package ru.globux.tacos;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 import java.util.Objects;
 
 @Entity
 public class Ingredient {
+
     @Id
-    @Column(nullable = false)
     private final String id;
     private final String name;
     private final Type type;
-
-    public String getId() {
-        return id;
-    }
 
     public enum Type {
         WRAP, PROTEIN, VEGGIES, CHEESE, SAUCE
@@ -33,6 +30,10 @@ public class Ingredient {
         this.id = null;
         this.name = null;
         this.type = null;
+    }
+
+    public String getId() {
+        return id;
     }
 
     public Type getType() {

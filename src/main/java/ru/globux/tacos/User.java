@@ -1,7 +1,6 @@
 package ru.globux.tacos;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,7 +16,6 @@ public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(nullable = false)
     private Long id;
 
     private final String username;
@@ -32,11 +30,6 @@ public class User implements UserDetails {
     public Long getId() {
         return this.id;
     }
-
-//    public User(String username, String password) {
-//        this.username = username;
-//        this.password = password;
-//    }
 
     public User(String username, String password, String fullname, String street,
                 String city, String state, String zip, String phoneNumber) {

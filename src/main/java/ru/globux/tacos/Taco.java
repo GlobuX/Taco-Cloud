@@ -10,6 +10,7 @@ import jakarta.validation.constraints.Size;
 
 @Entity
 public class Taco {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -18,18 +19,23 @@ public class Taco {
     @Size(min = 5, message = "Name must be at least 5 characters long")
     private String name;
 
-    @NotNull
-    @Size(min = 1, message = "You must choose at least 1 ingredient")
-    @ManyToMany(targetEntity = Ingredient.class)
+    @ManyToMany(targetEntity = Ingredient.class, cascade = CascadeType.MERGE)
+    @JoinTable(name = "Taco_Ingredients",
+            joinColumns = @JoinColumn(name = "taco_id"),
+            inverseJoinColumns = @JoinColumn(name = "ingredient_id"))
     private List<Ingredient> ingredients;
 
-    private Date createdAt = new Date();
+    private Date createdAt;
+
+    @PrePersist
+    public void createdAt() {
+        this.createdAt = new Date();
+    }
 
     public Long getId() {
         return id;
     }
 
-    @PrePersist
     public void setId() {
         this.createdAt = new Date();
     }

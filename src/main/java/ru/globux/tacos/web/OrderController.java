@@ -18,7 +18,7 @@ import ru.globux.tacos.data.OrderRepository;
 
 @Controller
 @RequestMapping("/orders")
-@SessionAttributes("order")
+@SessionAttributes("tacoOrder")
 public class OrderController {
     //private Logger log = LoggerFactory.getLogger(OrderController.class);
     private final OrderRepository orderRepository;
