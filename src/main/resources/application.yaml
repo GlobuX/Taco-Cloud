@@ -12,11 +12,13 @@ spring:
     name: Taco-Cloud
   thymeleaf:
     cache: false
-
   jpa:
     show-sql: true
     hibernate:
       ddl-auto: update
+#  data:
+#    rest:
+#      base-path: /data-api
   datasource:
     name: tacocloud
     generate-unique-name: false
