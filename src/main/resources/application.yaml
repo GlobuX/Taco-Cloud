@@ -22,13 +22,17 @@ spring:
   datasource:
     name: tacocloud
     generate-unique-name: false
-    url: jdbc:h2:mem:tacocloud
-    driver-class-name: org.h2.Driver
-    username: sa
-    password:
-  h2:
-    console:
-      enabled: true
+    url: jdbc:postgresql://45.151.30.229:5432/tacocloud
+    driver-class-name: org.postgresql.Driver
+    username: test
+    password: QWerty!@3456
+#    url: jdbc:h2:mem:tacocloud
+#    driver-class-name: org.h2.Driver
+#    username: sa
+#    password:
+#  h2:
+#    console:
+#      enabled: true
 
 management:
   endpoints:
@@ -36,7 +40,7 @@ management:
       default: unrestricted
 logging:
   level:
-    org.springframework.security: warn
+    org.springframework.security: trace
 taco:
   orders:
     pageSize: 20
