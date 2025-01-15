@@ -6,7 +6,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.SecurityFilterChain;
-import ru.globux.tacos.data.UserRepository;
+import ru.globux.tacos.authorization.users.UserRepository;
 
 @EnableWebSecurity
 public class SecurityConfig {
@@ -20,6 +20,6 @@ public class SecurityConfig {
 
     @Bean
     UserDetailsService userDetailsService(UserRepository userRepo) {
-        return username -> userRepo.findByUserName(username);
+        return username -> userRepo.findByUsername(username);
     }
 }
