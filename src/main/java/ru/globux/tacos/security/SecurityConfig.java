@@ -23,11 +23,6 @@ import java.util.List;
 @EnableWebSecurity(debug = true)
 @Configuration
 public class SecurityConfig {
-    private UserDetailsService userDetailsService;
-
-    public SecurityConfig(UserDetailsService userDetailsService) {
-        this.userDetailsService = userDetailsService;
-    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -51,18 +46,4 @@ public class SecurityConfig {
                     .frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin));
         return http.build();
     }
-
-
-//    @Bean
-//    public UserDetailsService userDetailsService(PasswordEncoder encoder) {
-//        List<UserDetails> userList = new ArrayList<>();
-//        userList.add(new User("buzz", encoder.encode("pass"),
-//                List.of(new SimpleGrantedAuthority("ROLE_USER"))));
-//        userList.add(new User("woody", encoder.encode("pass"),
-//                List.of(new SimpleGrantedAuthority("ROLE_USER"))));
-//        userList.add(new User("glob", encoder.encode("pass"),
-//                List.of(new SimpleGrantedAuthority("ROLE_USER"))));
-//        return new InMemoryUserDetailsManager(userList);
-//    }
-
 }

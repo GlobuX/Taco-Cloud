@@ -1,5 +1,25 @@
 server:
   port: 9002
+  servlet:
+    session:
+      tracking-modes: cookie
+
 spring:
   application:
     name: auth-server
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+  datasource:
+    name: tacocloud
+    generate-unique-name: false
+    url: jdbc:postgresql://45.151.30.229:5432/tacocloud
+    driver-class-name: org.postgresql.Driver
+    username: test
+    password: QWerty!@3456
+
+logging:
+  level:
+    org.springframework.security: trace
+    org.springframework.data.jpa: trace

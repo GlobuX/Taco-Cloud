@@ -1,51 +1,36 @@
 package ru.globux.tacos.authorization.users;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.io.Serial;
 import java.util.Collection;
-import java.util.List;
+import java.util.Collections;
 import java.util.Objects;
 
 @Entity
+@Table(name = "auth_users")
 public class User implements UserDetails {
-    @Serial
     private static final long serialVersionUID = 1L;
 
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private final String userName;
+    private final String username;
     private final String password;
     private final String role;
 
-    public User(String userName, String password, String role) {
-        this.userName = userName;
-        this.password = password;
-        this.role = role;
-    }
-
-    @Override
     public String getUsername() {
-        return this.userName;
+        return this.username;
     }
 
-    @Override
     public String getPassword() {
         return this.password;
     }
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
-    }
-
-    public User() {
-        this.userName = null;
-        this.password = null;
-        this.role = null;
+    public String getRole() {
+        return role;
     }
 
     public Long getId() {
@@ -56,8 +41,22 @@ public class User implements UserDetails {
         this.id = id;
     }
 
-    public String getRole() {
-        return role;
+    @Transient
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return Collections.singletonList(new SimpleGrantedAuthority(this.role));
+    }
+
+    public User(String username, String password, String role) {
+        this.username = username;
+        this.password = password;
+        this.role = role;
+    }
+
+    public User() {
+        this.username = null;
+        this.password = null;
+        this.role = null;
     }
 
     @Override
@@ -65,20 +64,20 @@ public class User implements UserDetails {
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
         return Objects.equals(id, user.id)
-                && Objects.equals(userName, user.userName)
+                && Objects.equals(username, user.username)
                 && Objects.equals(password, user.password);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, userName, password);
+        return Objects.hash(id, username, password);
     }
 
     @Override
     public String toString() {
         return "User{" +
                 "id=" + id +
-                ", userName='" + userName + '\'' +
+                ", userName='" + username + '\'' +
                 ", password='" + password + '\'' +
                 '}';
     }
