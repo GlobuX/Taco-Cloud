@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import ru.globux.tacos.Ingredient;
 
 @CrossOrigin(origins="http://localhost:8080")
-public interface IngredientRepository 
-         extends CrudRepository<Ingredient, String> {
+public interface IngredientRepository extends CrudRepository<Ingredient, String> {
 
 }
