@@ -17,7 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
@@ -52,7 +52,8 @@ public class DesignTacoControllerBrowserTest {
   public void testDesignATacoPage() throws Exception {
     browser.get("http://localhost:" + port + "/api/tacos");
 
-    List<WebElement> ingredientGroups = browser.findElementsByClassName("ingredient-group");
+    //List<WebElement> ingredientGroups = browser.findElementsByClassName("ingredient-group");
+    List<WebElement> ingredientGroups = browser.findElements(By.className("ingredient-group"));
     assertThat(ingredientGroups).hasSize(5);
 
     WebElement wrapGroup = ingredientGroups.get(0);

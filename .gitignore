@@ -36,3 +36,6 @@ out/
 ### VS Code ###
 .vscode/
 /gradle/
+
+# Ignore Gradle build output directory
+build
