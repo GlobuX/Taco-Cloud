@@ -1,3 +1,25 @@
+spring:
+  profiles.active: dev
+  artemis:
+    #    host: localhost
+    broker-url: tcp://localhost:61616
+    user: artemis
+    password: artemis
+    embedded:
+      enabled: false
+
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
+  data:
+    rest:
+      base-path: /data-api
+  datasource:
+    generate-unique-name: false
+    name: tacocloud
+
 security:
   user:
     name: buzz
@@ -6,23 +28,21 @@ security:
 taco:
   orders:
     pageSize: 10
-
-
   discount:
     codes:
       abcdef: 10
 
-spring:
-  data:
-    rest:
-      base-path: /data-api
-  datasource:
-    generate-unique-name: false
-    name: tacocloud
+logging:
+  level:
+    root: "trace"
+    org.springframework.web: "trace"
+    org.hibernate: "error"
 
 ---
 spring:
-  profiles: prod
+  config:
+    activate:
+      on-profile: prod
 
   datasource:
     url: jdbc:mysql://localhost/tacocloud

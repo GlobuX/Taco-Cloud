@@ -14,7 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.servlet.ModelAndView;
 
 @SpringBootApplication
-@ComponentScan(basePackages = {"ru.globux.tacos.data", "ru.globux.tacos.security", "com.example.controller"})
+@ComponentScan(basePackages = {"ru.globux.tacos.data", "ru.globux.tacos.security"})
 public class TacoCloudApplication {
 
   public static void main(String[] args) {

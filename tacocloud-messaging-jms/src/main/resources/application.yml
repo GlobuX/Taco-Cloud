@@ -1,16 +1,33 @@
 # The values given here are actually the default values. But they are explicitly
 # set here as an example of setting the Artemis properties.
+
 spring:
+#  config:
+#    activate:
+#      on-profile: dev
   jms:
     template:
       default-destination: tacocloud.order.queue
   artemis:
     host: localhost
     port: 61616
-    user: tacoweb
-    password: letm31n
+    user: artemis
+    password: artemis
     embedded:
       enabled: false
+#  artemis:
+#    broker-url: tcp://localhost:61616
+#    user: artemis
+#    password: artemis
+#    embedded:
+#      enabled: false
+#  artemis:
+##    host: localhost
+#    user: artemis
+#    password: artemis
+#    embedded:
+#      enabled: false
+#    broker-url: tcp://localhost:61616
 
 ---
 # None of these properties will actually work as configured for this profile.
@@ -21,7 +38,7 @@ spring:
     activate:
       on-profile: production
   artemis:
-    host: artemis.tacocloud.com
+#    host: artemis.tacocloud.com
     user: tacoweb
     password: l3tm31n
-    broker-url: tcp://localhost:61617
+    broker-url: tcp://artemis.tacocloud.com:61617
