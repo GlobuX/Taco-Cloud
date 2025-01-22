@@ -4,77 +4,63 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation
-             .authentication.builders.AuthenticationManagerBuilder;
+        .authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web
-             .builders.HttpSecurity;
+        .builders.HttpSecurity;
 import org.springframework.security.config.annotation.web
-                        .configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web
-                        .configuration.WebSecurityConfigurerAdapter;
+        .configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
 
-@SuppressWarnings("deprecation")
 @Configuration
 @EnableWebSecurity
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
+public class SecurityConfig {
 
-  @Autowired
-  private UserDetailsService userDetailsService;
+    @Autowired
+    private UserDetailsService userDetailsService;
 
-  @Override
-  protected void configure(HttpSecurity http) throws Exception {
-    http
-      .authorizeRequests()
-        .antMatchers(HttpMethod.OPTIONS).permitAll() // needed for Angular/CORS
-        .antMatchers(HttpMethod.POST, "/api/ingredients").permitAll()
-        .antMatchers("/api/tacos", "/api/orders/**")
-            .permitAll()
-            //.access("hasRole('USER')")
-        .antMatchers(HttpMethod.PATCH, "/api/ingredients").permitAll()
-        .antMatchers("/**").access("permitAll")
+    @Bean
+    SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http.authorizeHttpRequests(authManReqMatchReg -> authManReqMatchReg
+                        .requestMatchers(HttpMethod.OPTIONS).permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/ingredients").permitAll()
+                        .requestMatchers("/api/tacos", "/api/orders/**").permitAll()
+                        .requestMatchers(HttpMethod.PATCH, "/api/ingredients").permitAll()
+                        .requestMatchers("/**").permitAll())
+                .formLogin(httpSecFormLoginConf -> httpSecFormLoginConf
+                        .loginPage("/login"))
+                .httpBasic(name -> name
+                        .realmName("Taco Cloud"))
+                .logout(logout -> logout
+                        .logoutSuccessUrl("/"))
+                .csrf(matcher -> matcher
+                        .ignoringRequestMatchers("/h2-console/**", "/api/**"))
+                // Allow pages to be loaded in frames from the same origin; needed for H2-Console
+                .headers(matcher -> matcher
+                        .frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin));
+        return http.build();
+    }
 
-      .and()
-        .formLogin()
-          .loginPage("/login")
-
-      .and()
-        .httpBasic()
-          .realmName("Taco Cloud")
-
-      .and()
-        .logout()
-          .logoutSuccessUrl("/")
-
-      .and()
-        .csrf()
-          .ignoringAntMatchers("/h2-console/**", "/api/**")
-
-      // Allow pages to be loaded in frames from the same origin; needed for H2-Console
-      .and()
-        .headers()
-          .frameOptions()
-            .sameOrigin()
-      ;
-  }
-
-  @Bean
-  public PasswordEncoder encoder() {
+    @Bean
+    public PasswordEncoder encoder() {
 //    return new StandardPasswordEncoder("53cr3t");
-    return NoOpPasswordEncoder.getInstance();
-  }
+        return NoOpPasswordEncoder.getInstance();
+    }
 
 
-  @Override
-  protected void configure(AuthenticationManagerBuilder auth)
-      throws Exception {
-
-    auth
-      .userDetailsService(userDetailsService)
-      .passwordEncoder(encoder());
-
-  }
-
+    @Bean
+    AuthenticationManager authenticationManager(UserDetailsService userDetailsService,
+                                                HttpSecurity http, PasswordEncoder encoder) throws Exception {
+        AuthenticationManagerBuilder authenticationManagerBuilder =
+                http.getSharedObject(AuthenticationManagerBuilder.class);
+        return authenticationManagerBuilder.userDetailsService(userDetailsService)
+                .passwordEncoder(encoder).and().build();
+    }
 }
+
+
